@@ -6,19 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Project Manager</title>
 
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-    <link
-      href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700"
-      rel="stylesheet"
-    />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet" />
     <!-- Bulma Version 0.9.0-->
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/bulma@0.9.0/css/bulma.min.css"
-    />
+    <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.0/css/bulma.min.css" />
     <link rel="stylesheet" type="text/css" href="css/app.css" />
 
     <script src="app.js" defer></script>
@@ -35,37 +26,48 @@
     </nav>
     <section class="container">
       <div class="columns">
-        <div class="column is-3">
-          <a class="button is-primary is-block is-alt is-large" href="#"
-            >New Post</a
-          >
-          <aside class="menu">
-            <p class="menu-label">Tags</p>
-            <ul class="menu-list">
-              <li><span class="tag is-primary is-medium">Dashboard</span></li>
-              <li><span class="tag is-link is-medium">Customers</span></li>
-              <li>
-                <span class="tag is-light is-danger is-medium"
-                  >Authentication</span
-                >
-              </li>
-              <li><span class="tag is-dark is-medium">Payments</span></li>
-              <li><span class="tag is-success is-medium">Transfers</span></li>
-              <li><span class="tag is-warning is-medium">Balance</span></li>
-              <li><span class="tag is-medium">Question</span></li>
-            </ul>
-          </aside>
-        </div>
-        <div class="column is-9">
+        <template id="project-input">
+          <form>
+            <div class="field">
+              <label class="label">Title</label>
+              <div class="control">
+                <input class="input" type="text" id="title" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">Description</label>
+              <div class="control">
+                <textarea class="textarea" id="description"></textarea>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">People</label>
+              <div class="control">
+                <input class="input" id="people" type="number" />
+              </div>
+            </div>
+
+            <div class="field is-grouped">
+              <div class="control">
+                <button class="button is-link">Submit</button>
+              </div>
+              <div class="control">
+                <button class="button is-link is-light">Cancel</button>
+              </div>
+            </div>
+          </form>
+        </template>
+        <div class="column is-12">
           <div class="box content">
+            <div id="app"></div>
             <article class="post">
               <h4>Bulma: How do you center a button in a box?</h4>
               <div class="media">
                 <div class="media-left">
                   <p class="image is-32x32">
-                    <img
-                      src="http://bulma.io/images/placeholders/128x128.png"
-                    />
+                    <img src="http://bulma.io/images/placeholders/128x128.png" />
                   </p>
                 </div>
                 <div class="media-content">
@@ -77,9 +79,7 @@
                   </div>
                 </div>
                 <div class="media-right">
-                  <span class="has-text-grey-light"
-                    ><i class="fa fa-comments"></i> 1</span
-                  >
+                  <span class="has-text-grey-light"><i class="fa fa-comments"></i> 1</span>
                 </div>
               </div>
             </article>
@@ -88,9 +88,7 @@
               <div class="media">
                 <div class="media-left">
                   <p class="image is-32x32">
-                    <img
-                      src="http://bulma.io/images/placeholders/128x128.png"
-                    />
+                    <img src="http://bulma.io/images/placeholders/128x128.png" />
                   </p>
                 </div>
                 <div class="media-content">
@@ -102,23 +100,16 @@
                   </div>
                 </div>
                 <div class="media-right">
-                  <span class="has-text-grey-light"
-                    ><i class="fa fa-comments"></i> 0</span
-                  >
+                  <span class="has-text-grey-light"><i class="fa fa-comments"></i> 0</span>
                 </div>
               </div>
             </article>
             <article class="post">
-              <h4>
-                TypeError: Data must be a string or a buffer when trying touse
-                vue-bulma-tabs
-              </h4>
+              <h4>TypeError: Data must be a string or a buffer when trying touse vue-bulma-tabs</h4>
               <div class="media">
                 <div class="media-left">
                   <p class="image is-32x32">
-                    <img
-                      src="http://bulma.io/images/placeholders/128x128.png"
-                    />
+                    <img src="http://bulma.io/images/placeholders/128x128.png" />
                   </p>
                 </div>
                 <div class="media-content">
@@ -130,9 +121,7 @@
                   </div>
                 </div>
                 <div class="media-right">
-                  <span class="has-text-grey-light"
-                    ><i class="fa fa-comments"></i> 13</span
-                  >
+                  <span class="has-text-grey-light"><i class="fa fa-comments"></i> 13</span>
                 </div>
               </div>
             </article>
@@ -141,9 +130,7 @@
               <div class="media">
                 <div class="media-left">
                   <p class="image is-32x32">
-                    <img
-                      src="http://bulma.io/images/placeholders/128x128.png"
-                    />
+                    <img src="http://bulma.io/images/placeholders/128x128.png" />
                   </p>
                 </div>
                 <div class="media-content">
@@ -155,23 +142,16 @@
                   </div>
                 </div>
                 <div class="media-right">
-                  <span class="has-text-grey-light"
-                    ><i class="fa fa-comments"></i> 2</span
-                  >
+                  <span class="has-text-grey-light"><i class="fa fa-comments"></i> 2</span>
                 </div>
               </div>
             </article>
             <article class="post">
-              <h4>
-                I'm trying to use hamburger menu on bulma css, but it doesn't
-                work. What is wrong?
-              </h4>
+              <h4>I'm trying to use hamburger menu on bulma css, but it doesn't work. What is wrong?</h4>
               <div class="media">
                 <div class="media-left">
                   <p class="image is-32x32">
-                    <img
-                      src="http://bulma.io/images/placeholders/128x128.png"
-                    />
+                    <img src="http://bulma.io/images/placeholders/128x128.png" />
                   </p>
                 </div>
                 <div class="media-content">
@@ -183,9 +163,7 @@
                   </div>
                 </div>
                 <div class="media-right">
-                  <span class="has-text-grey-light"
-                    ><i class="fa fa-comments"></i> 2</span
-                  >
+                  <span class="has-text-grey-light"><i class="fa fa-comments"></i> 2</span>
                 </div>
               </div>
             </article>
@@ -194,9 +172,7 @@
               <div class="media">
                 <div class="media-left">
                   <p class="image is-32x32">
-                    <img
-                      src="http://bulma.io/images/placeholders/128x128.png"
-                    />
+                    <img src="http://bulma.io/images/placeholders/128x128.png" />
                   </p>
                 </div>
                 <div class="media-content">
@@ -208,9 +184,7 @@
                   </div>
                 </div>
                 <div class="media-right">
-                  <span class="has-text-grey-light"
-                    ><i class="fa fa-comments"></i> 2</span
-                  >
+                  <span class="has-text-grey-light"><i class="fa fa-comments"></i> 2</span>
                 </div>
               </div>
             </article>
