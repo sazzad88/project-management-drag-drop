@@ -29,9 +29,28 @@ var ProjectInput = /** @class */ (function () {
         this.configure();
         this.attach();
     }
+    ProjectInput.prototype.gatherUserInput = function () {
+        var enteredTitle = this.titleInputElement.value;
+        var enteredDescritption = this.descriptionInputElement.value;
+        var enteredPeopleAmount = this.peopleInputElement.value;
+        if (enteredTitle.trim().length === 0 || enteredDescritption.trim().length === 0 || enteredPeopleAmount.trim().length === 0) {
+            alert("some error");
+        }
+        else
+            return [enteredTitle, enteredDescritption, +enteredPeopleAmount];
+    };
+    ProjectInput.prototype.clearInput = function () {
+        this.titleInputElement.value = "";
+        this.descriptionInputElement.value = "";
+        this.peopleInputElement.value = "";
+    };
     ProjectInput.prototype.submitHandler = function (event) {
         event.preventDefault();
-        console.log(this.titleInputElement.value);
+        var userInput = this.gatherUserInput();
+        if (Array.isArray(userInput)) {
+            var title = userInput[0], desc = userInput[1], people = userInput[2];
+            this.clearInput();
+        }
     };
     ProjectInput.prototype.attach = function () {
         this.hostElement.insertAdjacentElement("afterbegin", this.element);
