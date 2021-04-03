@@ -48,6 +48,34 @@ function autobind(_: any, _2: string, descriptor: PropertyDescriptor) {
   return adjDescriptor;
 }
 
+class ProjectList {
+  public templateElement: HTMLTemplateElement;
+  public hostElement: HTMLDivElement;
+  public element: HTMLElement;
+
+  constructor(private type: "active" | "finished") {
+    this.templateElement = document.getElementById("project-list")! as HTMLTemplateElement;
+    this.hostElement = document.getElementById("app")! as HTMLDivElement;
+
+    const importedNode = document.importNode(this.templateElement.content, true);
+    this.element = importedNode.firstElementChild as HTMLElement;
+    this.element.id = `${this.type}-projects`;
+
+    this.attach();
+    this.renderContent();
+  }
+
+  private renderContent() {
+    const listId = `${this.type}-project-lists`;
+    this.element.querySelector("ul")!.id = listId;
+    this.element.querySelector("h3")!.textContent = this.type.toUpperCase() + " PROJECTS";
+  }
+
+  private attach() {
+    this.hostElement.insertAdjacentElement("beforeend", this.element);
+  }
+}
+
 class ProjectInput {
   public templateElement: HTMLTemplateElement;
   public hostElement: HTMLDivElement;
@@ -57,7 +85,7 @@ class ProjectInput {
   public peopleInputElement: HTMLInputElement;
   constructor() {
     this.templateElement = document.getElementById("project-input")! as HTMLTemplateElement;
-    this.hostElement = document.getElementById("app")! as HTMLDivElement;
+    this.hostElement = document.getElementById("my-form")! as HTMLDivElement;
 
     const importedNode = document.importNode(this.templateElement.content, true);
     this.element = importedNode.firstElementChild as HTMLFormElement;
@@ -78,8 +106,6 @@ class ProjectInput {
     const validTitle = validate({ value: enteredTitle, required: true, minLength: 2 });
     const validDesc = validate({ value: enteredDescritption, required: true, minLength: 5 });
     const validPeople = validate({ value: +enteredPeopleAmount, required: true, min: 1, max: 5 });
-
-    console.log({ validTitle, validDesc, validPeople });
 
     if (!validTitle || !validDesc || !validPeople) {
       alert("some error");
@@ -112,4 +138,6 @@ class ProjectInput {
   }
 }
 
-const firstInput = new ProjectInput();
+const projectInput = new ProjectInput();
+const activeProjectList = new ProjectList("active");
+const finihsedProjectList = new ProjectList("finished");

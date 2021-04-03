@@ -1,7 +1,6 @@
 html,
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   background: #f2f6fa;
 }
 footer {
@@ -58,4 +57,31 @@ article.post:last-child {
 }
 .menu-list li {
   padding: 5px;
+}
+
+#active-projects {
+  border: 1px solid green;
+}
+
+#active-projects h3 {
+  padding: 10px;
+  background-color: #a71212;
+  color: #f2f6fa;
+  font-weight: bold;
+  text-align: center;
+}
+
+#finished-projects {
+  border: 1px solid gray;
+}
+
+#finished-projects h3 {
+  padding: 10px;
+  background-color: #0d74f6;
+  color: #f2f6fa;
+  font-weight: bold;
+  text-align: center;
+}
+
+#active-project-lists {
 }

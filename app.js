@@ -36,10 +36,31 @@ function autobind(_, _2, descriptor) {
     };
     return adjDescriptor;
 }
+var ProjectList = /** @class */ (function () {
+    function ProjectList(type) {
+        this.type = type;
+        this.templateElement = document.getElementById("project-list");
+        this.hostElement = document.getElementById("app");
+        var importedNode = document.importNode(this.templateElement.content, true);
+        this.element = importedNode.firstElementChild;
+        this.element.id = this.type + "-projects";
+        this.attach();
+        this.renderContent();
+    }
+    ProjectList.prototype.renderContent = function () {
+        var listId = this.type + "-project-lists";
+        this.element.querySelector("ul").id = listId;
+        this.element.querySelector("h3").textContent = this.type.toUpperCase() + " PROJECTS";
+    };
+    ProjectList.prototype.attach = function () {
+        this.hostElement.insertAdjacentElement("beforeend", this.element);
+    };
+    return ProjectList;
+}());
 var ProjectInput = /** @class */ (function () {
     function ProjectInput() {
         this.templateElement = document.getElementById("project-input");
-        this.hostElement = document.getElementById("app");
+        this.hostElement = document.getElementById("my-form");
         var importedNode = document.importNode(this.templateElement.content, true);
         this.element = importedNode.firstElementChild;
         this.titleInputElement = this.element.querySelector("#title");
@@ -55,7 +76,6 @@ var ProjectInput = /** @class */ (function () {
         var validTitle = validate({ value: enteredTitle, required: true, minLength: 2 });
         var validDesc = validate({ value: enteredDescritption, required: true, minLength: 5 });
         var validPeople = validate({ value: +enteredPeopleAmount, required: true, min: 1, max: 5 });
-        console.log({ validTitle: validTitle, validDesc: validDesc, validPeople: validPeople });
         if (!validTitle || !validDesc || !validPeople) {
             alert("some error");
         }
@@ -87,4 +107,6 @@ var ProjectInput = /** @class */ (function () {
     ], ProjectInput.prototype, "submitHandler", null);
     return ProjectInput;
 }());
-var firstInput = new ProjectInput();
+var projectInput = new ProjectInput();
+var activeProjectList = new ProjectList("active");
+var finihsedProjectList = new ProjectList("finished");
