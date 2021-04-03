@@ -5,6 +5,40 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var ProjectStatus;
+(function (ProjectStatus) {
+    ProjectStatus[ProjectStatus["Active"] = 0] = "Active";
+    ProjectStatus[ProjectStatus["Finished"] = 1] = "Finished";
+})(ProjectStatus || (ProjectStatus = {}));
+var Project = /** @class */ (function () {
+    function Project(id, title, description, people, status) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.people = people;
+        this.status = status;
+    }
+    return Project;
+}());
+var ProjectState = /** @class */ (function () {
+    function ProjectState() {
+        this.listeners = [];
+        this.projects = [];
+    }
+    ProjectState.prototype.addListener = function (listenerFn) {
+        this.listeners.push(listenerFn);
+    };
+    ProjectState.prototype.addProject = function (title, description, numOfPeople) {
+        var project = new Project(Math.random().toString(), title, description, numOfPeople, ProjectStatus.Active);
+        this.projects.push(project);
+        for (var _i = 0, _a = this.listeners; _i < _a.length; _i++) {
+            var listenerFn = _a[_i];
+            listenerFn(JSON.parse(JSON.stringify(this.projects)));
+        }
+    };
+    return ProjectState;
+}());
+var projectState = new ProjectState();
 function validate(validatableInput) {
     var isValid = true;
     if (validatableInput.required) {
@@ -38,15 +72,37 @@ function autobind(_, _2, descriptor) {
 }
 var ProjectList = /** @class */ (function () {
     function ProjectList(type) {
+        var _this = this;
         this.type = type;
+        this.assignedProjects = [];
+        this.assignedProjects = [];
         this.templateElement = document.getElementById("project-list");
         this.hostElement = document.getElementById("app");
         var importedNode = document.importNode(this.templateElement.content, true);
         this.element = importedNode.firstElementChild;
         this.element.id = this.type + "-projects";
+        projectState.addListener(function (projects) {
+            var relevantProjects = projects.filter(function (prj) {
+                if (_this.type == "active")
+                    return prj.status == ProjectStatus.Active;
+                return prj.status == ProjectStatus.Finished;
+            });
+            _this.assignedProjects = relevantProjects;
+            _this.renderProjects();
+        });
         this.attach();
         this.renderContent();
     }
+    ProjectList.prototype.renderProjects = function () {
+        var eL = document.getElementById(this.type + "-project-lists");
+        eL.innerHTML = "";
+        for (var _i = 0, _a = this.assignedProjects; _i < _a.length; _i++) {
+            var prjItem = _a[_i];
+            var listItem = document.createElement("li");
+            listItem.textContent = prjItem.title;
+            eL.appendChild(listItem);
+        }
+    };
     ProjectList.prototype.renderContent = function () {
         var listId = this.type + "-project-lists";
         this.element.querySelector("ul").id = listId;
@@ -76,6 +132,11 @@ var ProjectInput = /** @class */ (function () {
         var validTitle = validate({ value: enteredTitle, required: true, minLength: 2 });
         var validDesc = validate({ value: enteredDescritption, required: true, minLength: 5 });
         var validPeople = validate({ value: +enteredPeopleAmount, required: true, min: 1, max: 5 });
+        console.log({
+            validTitle: validTitle,
+            validDesc: validDesc,
+            validPeople: validPeople,
+        });
         if (!validTitle || !validDesc || !validPeople) {
             alert("some error");
         }
@@ -92,6 +153,7 @@ var ProjectInput = /** @class */ (function () {
         var userInput = this.gatherUserInput();
         if (Array.isArray(userInput)) {
             var title = userInput[0], desc = userInput[1], people = userInput[2];
+            projectState.addProject(title, desc, people);
             this.clearInput();
         }
     };

@@ -83,5 +83,19 @@ article.post:last-child {
   text-align: center;
 }
 
-#active-project-lists {
+.projects {
+  background: #f6f6f6;
+}
+
+.projects ul {
+  list-style-type: none;
+  margin-left: 5px !important;
+}
+
+.projects li {
+  padding: 10px;
+  background: #ffffff;
+  border-radius: 5px;
+  margin-top: 15px !important;
+  box-shadow: 2px 4px 2px #888888;
 }
