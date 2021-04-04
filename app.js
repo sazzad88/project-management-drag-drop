@@ -156,6 +156,14 @@ var ProjectList = /** @class */ (function (_super) {
         _this.renderContent();
         return _this;
     }
+    ProjectList.prototype.dragOverHandler = function (_) {
+        var listEl = this.element.querySelector("ul");
+        listEl.classList.add("droppable");
+    };
+    ProjectList.prototype.dropHandler = function (_) { };
+    ProjectList.prototype.dragLeaveHandler = function (_) {
+        this.element.querySelector("ul").classList.remove("droppable");
+    };
     ProjectList.prototype.renderProjects = function () {
         var eL = document.getElementById(this.type + "-project-lists");
         eL.innerHTML = "";
@@ -166,6 +174,9 @@ var ProjectList = /** @class */ (function (_super) {
     };
     ProjectList.prototype.configure = function () {
         var _this = this;
+        this.element.addEventListener("dragover", this.dragOverHandler);
+        this.element.addEventListener("dragleave", this.dragLeaveHandler);
+        this.element.addEventListener("drop", this.dropHandler);
         projectState.addListener(function (projects) {
             var relevantProjects = projects.filter(function (prj) {
                 if (_this.type == "active")
@@ -181,6 +192,15 @@ var ProjectList = /** @class */ (function (_super) {
         this.element.querySelector("ul").id = listId;
         this.element.querySelector("h3").textContent = this.type.toUpperCase() + " PROJECTS";
     };
+    __decorate([
+        autobind
+    ], ProjectList.prototype, "dragOverHandler", null);
+    __decorate([
+        autobind
+    ], ProjectList.prototype, "dropHandler", null);
+    __decorate([
+        autobind
+    ], ProjectList.prototype, "dragLeaveHandler", null);
     return ProjectList;
 }(Component));
 var ProjectInput = /** @class */ (function (_super) {
