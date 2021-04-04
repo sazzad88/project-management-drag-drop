@@ -45,6 +45,20 @@ class ProjectState extends State<Project> {
 
     this.projects.push(project);
 
+    this.updateListeners();
+  }
+
+  moveProject(projectId: string, newStatus: ProjectStatus) {
+    const selectedProject = this.projects.find((item) => item.id === projectId);
+
+    if (selectedProject && selectedProject.status !== newStatus) {
+      selectedProject.status = newStatus;
+
+      this.updateListeners();
+    }
+  }
+
+  private updateListeners() {
     for (const listenerFn of this.listeners) {
       listenerFn(JSON.parse(JSON.stringify(this.projects)));
     }
@@ -135,7 +149,8 @@ class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> implements 
 
   @autobind
   dragStartHandler(event: DragEvent) {
-    console.log(event);
+    event.dataTransfer!.setData("text/plain", this.project.id);
+    event.dataTransfer!.effectAllowed = "move";
   }
   @autobind
   dragEndHandler(_: DragEvent) {
@@ -166,12 +181,19 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> implements Drag
   }
 
   @autobind
-  dragOverHandler(_: DragEvent) {
-    const listEl = this.element.querySelector("ul")!;
-    listEl.classList.add("droppable");
+  dragOverHandler(event: DragEvent) {
+    if (event.dataTransfer! && event.dataTransfer!.types[0] === "text/plain") {
+      event.preventDefault();
+      const listEl = this.element.querySelector("ul")!;
+      listEl.classList.add("droppable");
+    }
   }
+
   @autobind
-  dropHandler(_: DragEvent) {}
+  dropHandler(event: DragEvent) {
+    const prjId = event.dataTransfer!.getData("text/plain");
+    projectState.moveProject(prjId, this.type === "active" ? ProjectStatus.Active : ProjectStatus.Finished);
+  }
   @autobind
   dragLeaveHandler(_: DragEvent) {
     this.element.querySelector("ul")!.classList.remove("droppable");
@@ -230,8 +252,8 @@ class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
     const enteredPeopleAmount = this.peopleInputElement.value;
 
     const validTitle = validate({ value: enteredTitle, required: true, minLength: 2 });
-    const validDesc = validate({ value: enteredDescritption, required: true, minLength: 5 });
-    const validPeople = validate({ value: +enteredPeopleAmount, required: true, min: 1, max: 5 });
+    const validDesc = validate({ value: enteredDescritption, required: true, minLength: 2 });
+    const validPeople = validate({ value: +enteredPeopleAmount, required: true, min: 1, max: 500 });
 
     // console.log({
     //   validTitle,

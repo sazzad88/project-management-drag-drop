@@ -90,13 +90,15 @@ article.post:last-child {
 .projects ul {
   list-style-type: none;
   margin: 5px !important;
+  border-radius: 8px;
+  padding: 5px;
 }
 
 .projects li {
   padding: 10px;
-  /* background: #ffffff; */
+  background: #ffffff;
   border-radius: 5px;
-  margin-top: 25px !important;
+  margin: 25px;
   box-shadow: 2px 4px 2px #888888;
 }
 
@@ -104,6 +106,10 @@ article.post:last-child {
   background: lightcoral !important;
 }
 
+#active-projects .droppable {
+  background: lightcoral !important;
+}
+
 #finished-projects .droppable {
-  background: maroon !important;
+  background: lightblue !important;
 }
