@@ -122,12 +122,27 @@ var ProjectItem = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
-    ProjectItem.prototype.configure = function () { };
+    ProjectItem.prototype.dragStartHandler = function (event) {
+        console.log(event);
+    };
+    ProjectItem.prototype.dragEndHandler = function (_) {
+        console.log("drag ended");
+    };
+    ProjectItem.prototype.configure = function () {
+        this.element.addEventListener("dragstart", this.dragStartHandler);
+        this.element.addEventListener("dragend", this.dragEndHandler);
+    };
     ProjectItem.prototype.renderContent = function () {
         this.element.querySelector("h4").textContent = this.project.title;
         this.element.querySelector("h5").textContent = this.persons + " assigned";
         this.element.querySelector("p").textContent = this.project.description;
     };
+    __decorate([
+        autobind
+    ], ProjectItem.prototype, "dragStartHandler", null);
+    __decorate([
+        autobind
+    ], ProjectItem.prototype, "dragEndHandler", null);
     return ProjectItem;
 }(Component));
 var ProjectList = /** @class */ (function (_super) {
