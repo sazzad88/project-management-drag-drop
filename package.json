@@ -1,5 +1,26 @@
 {
   "prettier": {
     "printWidth": 150
+  },
+  "name": "projects-drag-drop",
+  "description": "- Powered by typescript - Drag and drop feature implemented in object oriented way. - As this is my first actual app driven by typescript i wrote it all in one file.From the next app multiple file will be used with proper namespace",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "lite-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sazzad88/project-management-drag-drop.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sazzad88/project-management-drag-drop/issues"
+  },
+  "homepage": "https://github.com/sazzad88/project-management-drag-drop#readme",
+  "devDependencies": {
+    "lite-server": "^2.6.1"
   }
 }

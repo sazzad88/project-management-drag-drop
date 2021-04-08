@@ -1,4 +1,3 @@
-"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -18,68 +17,31 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var App;
-(function (App) {
-    var ProjectStatus;
-    (function (ProjectStatus) {
-        ProjectStatus[ProjectStatus["Active"] = 0] = "Active";
-        ProjectStatus[ProjectStatus["Finished"] = 1] = "Finished";
-    })(ProjectStatus = App.ProjectStatus || (App.ProjectStatus = {}));
-    var Project = /** @class */ (function () {
-        function Project(id, title, description, people, status) {
-            this.id = id;
-            this.title = title;
-            this.description = description;
-            this.people = people;
-            this.status = status;
+define("components/base-component", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.Component = void 0;
+    var Component = /** @class */ (function () {
+        function Component(templateId, hostElementId, insertAtStart, newElementId) {
+            this.templateElement = document.getElementById(templateId);
+            this.hostElement = document.getElementById(hostElementId);
+            var importedNode = document.importNode(this.templateElement.content, true);
+            this.element = importedNode.firstElementChild;
+            if (newElementId)
+                this.element.id = newElementId;
+            this.attach(insertAtStart);
         }
-        return Project;
+        Component.prototype.attach = function (insertAtStart) {
+            this.hostElement.insertAdjacentElement(insertAtStart ? "afterbegin" : "beforeend", this.element);
+        };
+        return Component;
     }());
-    App.Project = Project;
-})(App || (App = {}));
-var App;
-(function (App) {
-    var State = /** @class */ (function () {
-        function State() {
-            this.listeners = [];
-        }
-        State.prototype.addListener = function (listenerFn) {
-            this.listeners.push(listenerFn);
-        };
-        return State;
-    }());
-    var ProjectState = /** @class */ (function (_super) {
-        __extends(ProjectState, _super);
-        function ProjectState() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.projects = [];
-            return _this;
-        }
-        ProjectState.prototype.addProject = function (title, description, numOfPeople) {
-            var project = new App.Project(Math.random().toString(), title, description, numOfPeople, App.ProjectStatus.Active);
-            this.projects.push(project);
-            this.updateListeners();
-        };
-        ProjectState.prototype.moveProject = function (projectId, newStatus) {
-            var selectedProject = this.projects.find(function (item) { return item.id === projectId; });
-            if (selectedProject && selectedProject.status !== newStatus) {
-                selectedProject.status = newStatus;
-                this.updateListeners();
-            }
-        };
-        ProjectState.prototype.updateListeners = function () {
-            for (var _i = 0, _a = this.listeners; _i < _a.length; _i++) {
-                var listenerFn = _a[_i];
-                listenerFn(JSON.parse(JSON.stringify(this.projects)));
-            }
-        };
-        return ProjectState;
-    }(State));
-    App.ProjectState = ProjectState;
-    App.projectState = new ProjectState();
-})(App || (App = {}));
-var App;
-(function (App) {
+    exports.Component = Component;
+});
+define("util/validation", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.validate = void 0;
     function validate(validatableInput) {
         var isValid = true;
         if (validatableInput.required) {
@@ -99,10 +61,12 @@ var App;
         }
         return isValid;
     }
-    App.validate = validate;
-})(App || (App = {}));
-var App;
-(function (App) {
+    exports.validate = validate;
+});
+define("decorators/autobind", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.autobind = void 0;
     function autobind(_, _2, descriptor) {
         var originalMethod = descriptor.value;
         var adjDescriptor = {
@@ -114,99 +78,76 @@ var App;
         };
         return adjDescriptor;
     }
-    App.autobind = autobind;
-})(App || (App = {}));
-var App;
-(function (App) {
-    var Component = /** @class */ (function () {
-        function Component(templateId, hostElementId, insertAtStart, newElementId) {
-            this.templateElement = document.getElementById(templateId);
-            this.hostElement = document.getElementById(hostElementId);
-            var importedNode = document.importNode(this.templateElement.content, true);
-            this.element = importedNode.firstElementChild;
-            if (newElementId)
-                this.element.id = newElementId;
-            this.attach(insertAtStart);
+    exports.autobind = autobind;
+});
+define("models/project", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.Project = exports.ProjectStatus = void 0;
+    var ProjectStatus;
+    (function (ProjectStatus) {
+        ProjectStatus[ProjectStatus["Active"] = 0] = "Active";
+        ProjectStatus[ProjectStatus["Finished"] = 1] = "Finished";
+    })(ProjectStatus = exports.ProjectStatus || (exports.ProjectStatus = {}));
+    var Project = /** @class */ (function () {
+        function Project(id, title, description, people, status) {
+            this.id = id;
+            this.title = title;
+            this.description = description;
+            this.people = people;
+            this.status = status;
         }
-        Component.prototype.attach = function (insertAtStart) {
-            this.hostElement.insertAdjacentElement(insertAtStart ? "afterbegin" : "beforeend", this.element);
-        };
-        return Component;
+        return Project;
     }());
-    App.Component = Component;
-})(App || (App = {}));
-/// <reference path="base-component.ts" />
-var App;
-(function (App) {
-    var ProjectList = /** @class */ (function (_super) {
-        __extends(ProjectList, _super);
-        function ProjectList(type) {
-            var _this = _super.call(this, "project-list", "app", false, type + "-projects") || this;
-            _this.type = type;
-            _this.assignedProjects = [];
-            _this.assignedProjects = [];
-            _this.configure();
-            _this.renderContent();
+    exports.Project = Project;
+});
+define("state/project-state", ["require", "exports", "models/project", "models/project"], function (require, exports, project_js_1, project_js_2) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.projectState = exports.ProjectState = void 0;
+    var State = /** @class */ (function () {
+        function State() {
+            this.listeners = [];
+        }
+        State.prototype.addListener = function (listenerFn) {
+            this.listeners.push(listenerFn);
+        };
+        return State;
+    }());
+    var ProjectState = /** @class */ (function (_super) {
+        __extends(ProjectState, _super);
+        function ProjectState() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.projects = [];
             return _this;
         }
-        ProjectList.prototype.dragOverHandler = function (event) {
-            if (event.dataTransfer && event.dataTransfer.types[0] === "text/plain") {
-                event.preventDefault();
-                var listEl = this.element.querySelector("ul");
-                listEl.classList.add("droppable");
+        ProjectState.prototype.addProject = function (title, description, numOfPeople) {
+            var project = new project_js_1.Project(Math.random().toString(), title, description, numOfPeople, project_js_2.ProjectStatus.Active);
+            this.projects.push(project);
+            this.updateListeners();
+        };
+        ProjectState.prototype.moveProject = function (projectId, newStatus) {
+            var selectedProject = this.projects.find(function (item) { return item.id === projectId; });
+            if (selectedProject && selectedProject.status !== newStatus) {
+                selectedProject.status = newStatus;
+                this.updateListeners();
             }
         };
-        ProjectList.prototype.dropHandler = function (event) {
-            var prjId = event.dataTransfer.getData("text/plain");
-            App.projectState.moveProject(prjId, this.type === "active" ? App.ProjectStatus.Active : App.ProjectStatus.Finished);
-        };
-        ProjectList.prototype.dragLeaveHandler = function (_) {
-            this.element.querySelector("ul").classList.remove("droppable");
-        };
-        ProjectList.prototype.renderProjects = function () {
-            var eL = document.getElementById(this.type + "-project-lists");
-            eL.innerHTML = "";
-            for (var _i = 0, _a = this.assignedProjects; _i < _a.length; _i++) {
-                var prjItem = _a[_i];
-                new App.ProjectItem(this.element.querySelector("ul").id, prjItem);
+        ProjectState.prototype.updateListeners = function () {
+            for (var _i = 0, _a = this.listeners; _i < _a.length; _i++) {
+                var listenerFn = _a[_i];
+                listenerFn(JSON.parse(JSON.stringify(this.projects)));
             }
         };
-        ProjectList.prototype.configure = function () {
-            var _this = this;
-            this.element.addEventListener("dragover", this.dragOverHandler);
-            this.element.addEventListener("dragleave", this.dragLeaveHandler);
-            this.element.addEventListener("drop", this.dropHandler);
-            App.projectState.addListener(function (projects) {
-                var relevantProjects = projects.filter(function (prj) {
-                    if (_this.type == "active")
-                        return prj.status == App.ProjectStatus.Active;
-                    return prj.status == App.ProjectStatus.Finished;
-                });
-                _this.assignedProjects = relevantProjects;
-                _this.renderProjects();
-            });
-        };
-        ProjectList.prototype.renderContent = function () {
-            var listId = this.type + "-project-lists";
-            this.element.querySelector("ul").id = listId;
-            this.element.querySelector("h3").textContent = this.type.toUpperCase() + " PROJECTS";
-        };
-        __decorate([
-            App.autobind
-        ], ProjectList.prototype, "dragOverHandler", null);
-        __decorate([
-            App.autobind
-        ], ProjectList.prototype, "dropHandler", null);
-        __decorate([
-            App.autobind
-        ], ProjectList.prototype, "dragLeaveHandler", null);
-        return ProjectList;
-    }(App.Component));
-    App.ProjectList = ProjectList;
-})(App || (App = {}));
-/// <reference path="base-component.ts" />
-var App;
-(function (App) {
+        return ProjectState;
+    }(State));
+    exports.ProjectState = ProjectState;
+    exports.projectState = new ProjectState();
+});
+define("components/project-input", ["require", "exports", "components/base-component", "util/validation", "decorators/autobind", "state/project-state"], function (require, exports, base_component_js_1, validation_js_1, autobind_js_1, project_state_js_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.ProjectInput = void 0;
     var ProjectInput = /** @class */ (function (_super) {
         __extends(ProjectInput, _super);
         function ProjectInput() {
@@ -221,15 +162,10 @@ var App;
             var enteredTitle = this.titleInputElement.value;
             var enteredDescritption = this.descriptionInputElement.value;
             var enteredPeopleAmount = this.peopleInputElement.value;
-            var validTitle = App.validate({ value: enteredTitle, required: true, minLength: 2 });
-            var validDesc = App.validate({ value: enteredDescritption, required: true, minLength: 2 });
-            var validPeople = App.validate({ value: +enteredPeopleAmount, required: true, min: 1, max: 500 });
-            // console.log({
-            //   validTitle,
-            //   validDesc,
-            //   validPeople,
-            // });
-            if (!validTitle || !validDesc || !validPeople) {
+            var validTitle = { value: enteredTitle, required: true, minLength: 2 };
+            var validDesc = { value: enteredDescritption, required: true, minLength: 2 };
+            var validPeople = { value: +enteredPeopleAmount, required: true, min: 1, max: 500 };
+            if (!validation_js_1.validate(validTitle) || !validation_js_1.validate(validDesc) || !validation_js_1.validate(validPeople)) {
                 alert("some error");
             }
             else
@@ -245,7 +181,7 @@ var App;
             var userInput = this.gatherUserInput();
             if (Array.isArray(userInput)) {
                 var title = userInput[0], desc = userInput[1], people = userInput[2];
-                App.projectState.addProject(title, desc, people);
+                project_state_js_1.projectState.addProject(title, desc, people);
                 this.clearInput();
             }
         };
@@ -255,28 +191,20 @@ var App;
             this.element.addEventListener("submit", this.submitHandler);
         };
         __decorate([
-            App.autobind
+            autobind_js_1.autobind
         ], ProjectInput.prototype, "submitHandler", null);
         return ProjectInput;
-    }(App.Component));
-    App.ProjectInput = ProjectInput;
-})(App || (App = {}));
-/// <reference path="models/drag-drop.ts" />
-/// <reference path="models/project.ts" />
-/// <reference path="state/project-state.ts" />
-/// <reference path="util/validation.ts" />
-/// <reference path="decorators/autobind.ts" />
-/// <reference path="components/project-list.ts" />
-/// <reference path="components/project-input.ts" />
-var App;
-(function (App) {
-    new App.ProjectInput();
-    new App.ProjectList("active");
-    new App.ProjectList("finished");
-})(App || (App = {}));
-/// <reference path="base-component.ts" />
-var App;
-(function (App) {
+    }(base_component_js_1.Component));
+    exports.ProjectInput = ProjectInput;
+});
+define("models/drag-drop", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+});
+define("components/project-item", ["require", "exports", "components/base-component", "decorators/autobind"], function (require, exports, base_component_js_2, autobind_js_2) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.ProjectItem = void 0;
     var ProjectItem = /** @class */ (function (_super) {
         __extends(ProjectItem, _super);
         function ProjectItem(hostId, project) {
@@ -310,12 +238,89 @@ var App;
             this.element.querySelector("p").textContent = this.project.description;
         };
         __decorate([
-            App.autobind
+            autobind_js_2.autobind
         ], ProjectItem.prototype, "dragStartHandler", null);
         __decorate([
-            App.autobind
+            autobind_js_2.autobind
         ], ProjectItem.prototype, "dragEndHandler", null);
         return ProjectItem;
-    }(App.Component));
-    App.ProjectItem = ProjectItem;
-})(App || (App = {}));
+    }(base_component_js_2.Component));
+    exports.ProjectItem = ProjectItem;
+});
+define("components/project-list", ["require", "exports", "components/base-component", "decorators/autobind", "state/project-state", "components/project-item", "models/project"], function (require, exports, base_component_js_3, autobind_js_3, project_state_js_2, project_item_js_1, project_js_3) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.ProjectList = void 0;
+    var ProjectList = /** @class */ (function (_super) {
+        __extends(ProjectList, _super);
+        function ProjectList(type) {
+            var _this = _super.call(this, "project-list", "app", false, type + "-projects") || this;
+            _this.type = type;
+            _this.assignedProjects = [];
+            _this.assignedProjects = [];
+            _this.configure();
+            _this.renderContent();
+            return _this;
+        }
+        ProjectList.prototype.dragOverHandler = function (event) {
+            if (event.dataTransfer && event.dataTransfer.types[0] === "text/plain") {
+                event.preventDefault();
+                var listEl = this.element.querySelector("ul");
+                listEl.classList.add("droppable");
+            }
+        };
+        ProjectList.prototype.dropHandler = function (event) {
+            var prjId = event.dataTransfer.getData("text/plain");
+            project_state_js_2.projectState.moveProject(prjId, this.type === "active" ? project_js_3.ProjectStatus.Active : project_js_3.ProjectStatus.Finished);
+        };
+        ProjectList.prototype.dragLeaveHandler = function (_) {
+            this.element.querySelector("ul").classList.remove("droppable");
+        };
+        ProjectList.prototype.renderProjects = function () {
+            var eL = document.getElementById(this.type + "-project-lists");
+            eL.innerHTML = "";
+            for (var _i = 0, _a = this.assignedProjects; _i < _a.length; _i++) {
+                var prjItem = _a[_i];
+                new project_item_js_1.ProjectItem(this.element.querySelector("ul").id, prjItem);
+            }
+        };
+        ProjectList.prototype.configure = function () {
+            var _this = this;
+            this.element.addEventListener("dragover", this.dragOverHandler);
+            this.element.addEventListener("dragleave", this.dragLeaveHandler);
+            this.element.addEventListener("drop", this.dropHandler);
+            project_state_js_2.projectState.addListener(function (projects) {
+                var relevantProjects = projects.filter(function (prj) {
+                    if (_this.type == "active")
+                        return prj.status == project_js_3.ProjectStatus.Active;
+                    return prj.status == project_js_3.ProjectStatus.Finished;
+                });
+                _this.assignedProjects = relevantProjects;
+                _this.renderProjects();
+            });
+        };
+        ProjectList.prototype.renderContent = function () {
+            var listId = this.type + "-project-lists";
+            this.element.querySelector("ul").id = listId;
+            this.element.querySelector("h3").textContent = this.type.toUpperCase() + " PROJECTS";
+        };
+        __decorate([
+            autobind_js_3.autobind
+        ], ProjectList.prototype, "dragOverHandler", null);
+        __decorate([
+            autobind_js_3.autobind
+        ], ProjectList.prototype, "dropHandler", null);
+        __decorate([
+            autobind_js_3.autobind
+        ], ProjectList.prototype, "dragLeaveHandler", null);
+        return ProjectList;
+    }(base_component_js_3.Component));
+    exports.ProjectList = ProjectList;
+});
+define("app", ["require", "exports", "components/project-input", "components/project-list"], function (require, exports, project_input_js_1, project_list_js_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    new project_input_js_1.ProjectInput();
+    new project_list_js_1.ProjectList("active");
+    new project_list_js_1.ProjectList("finished");
+});
